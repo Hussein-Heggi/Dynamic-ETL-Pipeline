@@ -72,18 +72,12 @@ if __name__ == "__main__":
     feature_requests = [
         {
             'api': 'polygon',
-            'ticker': 'AAPL',
-            'multiplier': 1,
-            'timespan': 'day',
+            #'ticker': 'AAPL',
+            #'multiplier': 1,
+            #'timespan': 'day',
             'from': '2025-01-03',
-            'to': '2025-02-25',
-            'endpoint_type': 0
-        },
-        {
-            'api': 'alpha_vantage',
-            'ticker': 'IBM',
-            'timespan': 'day',
-            'outputsize': 'compact'
+            #'to': '2025-02-25',
+            'endpoint_type': 1
         }
     ]
 
@@ -94,7 +88,7 @@ if __name__ == "__main__":
             print("DataFrame head:")
             print(res['df'].head())
             print("Gathered Features:", res['gathered_features'])
-            print("Stats Shape:", res['stats'].get('shape'))
+            print("Stats Shape:", res['stats'])
             print()
     except Exception as e:
         print("Processing failed:", e)
