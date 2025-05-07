@@ -8,9 +8,6 @@ class Ingestor:
     def __init__(self, config: Dict[str, Any]):
         """
         Initializes the Ingestor with a registry of API clients.
-
-        Args:
-            config (Dict[str, Any]): Configuration dict containing API keys.
         """
         self.clients = {
             'polygon': PolygonClient(api_key=config.get('polygon_api_key')),
@@ -22,19 +19,8 @@ class Ingestor:
         features: Union[Dict[str, Any], List[Dict[str, Any]]]
     ) -> List[Dict[str, Any]]:
         """
-        Process one or more feature requests across multiple API clients.
-
-        Args:
-            features: A single features dict or a list of them. Each must include an 'api' key to select the client.
-
-        Returns:
-            List of dicts, each containing:
-              - 'client': identifier of the API used
-              - 'df': Pandas DataFrame of results
-              - 'gathered_features': list of features parsed
-              - 'stats': computed statistics
+        Process requests and always export the resulting DataFrame to CSV.
         """
-        # Normalize to list
         requests = features if isinstance(features, list) else [features]
         outputs: List[Dict[str, Any]] = []
 
@@ -46,49 +32,33 @@ class Ingestor:
                 raise ValueError(f"No client found for API: {api_choice}")
 
             raw_pkg = client.fetch_data(feat_copy)
-            df, gathered = client.parse_response(raw_pkg)
-            stats = client.compute_statistics(df)
+            df = client.parse_response(raw_pkg)
+            # stats = client.compute_statistics(df)
+
+            # Export DataFrame to CSV file
+           # identifier = gathered.get('company_identifier', api_choice)
+            #start = gathered.get('start', '')
+           # end = gathered.get('end', '')
+            filename = f"{api_choice}_df.csv"
+            df.to_csv(filename, index=False)
 
             outputs.append({
                 'client': api_choice,
-                'df': df,
-                'gathered_features': gathered,
-                'stats': stats
+                'df': df
             })
 
         return outputs
 
-
 if __name__ == "__main__":
-    # Example keys (replace with your own for real runs)
     config = {
         'polygon_api_key': 'amT2HDpKSqyIvpdbz5DY9qLwWwPDpaB0',
         'alpha_vantage_api_key': 'WXOG38FYIAUD05SZ'
     }
-
     ingestor = Ingestor(config)
-
-    # Example requests for both APIs
+    # Example usage
     feature_requests = [
-        {
-            'api': 'polygon',
-            #'ticker': 'AAPL',
-            #'multiplier': 1,
-            #'timespan': 'day',
-            'from': '2025-01-03',
-            #'to': '2025-02-25',
-            'endpoint_type': 1
-        }
+        {'api': 'polygon', 'ticker': 'AAPL', 'multiplier': 1, 'timespan': 'day', 'from': '2025-01-01', 'to': '2025-02-01', 'endpoint_type': 0}
     ]
-
-    try:
-        results = ingestor.process_features(feature_requests)
-        for res in results:
-            print(f"--- Results for {res['client']} ---")
-            print("DataFrame head:")
-            print(res['df'].head())
-            print("Gathered Features:", res['gathered_features'])
-            print("Stats Shape:", res['stats'])
-            print()
-    except Exception as e:
-        print("Processing failed:", e)
+    results = ingestor.process_features(feature_requests)
+    for res in results:
+        print(f"Exported CSV for {res['client']}")
