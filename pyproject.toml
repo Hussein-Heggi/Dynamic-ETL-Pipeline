@@ -1,0 +1,16 @@
+[project]
+name = "dynamic-etl-pipeline"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "faiss-cpu>=1.11.0",
+    "nbformat>=5.10.4",
+    "numpy>=2.2.5",
+    "openai>=1.78.0",
+    "pandas>=2.2.3",
+    "polygon-api-client>=1.14.4",
+    "scikit-learn>=1.6.1",
+    "transformers>=4.51.3",
+]

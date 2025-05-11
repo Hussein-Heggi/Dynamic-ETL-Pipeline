@@ -59,39 +59,44 @@
             targetPkgs =
               pkgs:
               (with pkgs; [
-                cudatoolkit
+                # cudatoolkit
                 util-linux
                 m4
                 gperf
                 unzip
-                python311
-                python311Packages.pip
-                python311Packages.virtualenv
+                python313
+                python313Packages.pip
+                python313Packages.virtualenv
+                python313Packages.numpy
+		faiss
+                python313Packages.faiss
+                python313Packages.virtualenv
+                python313Packages.uv
+                python313Packages.ipython
                 cmake
                 ninja
                 gcc
+		git
+		neovim
                 pre-commit
-                linuxPackages.nvidia_x11
-                xorg.libXi
-                xorg.libXmu
-                freeglut
-                xorg.libXext
-                xorg.libX11
-                xorg.libXv
-                xorg.libXrandr
+                # linuxPackages.nvidia_x11
+                # xorg.libXi
+                # xorg.libXmu
+                # freeglut
+                # xorg.libXext
+                # xorg.libX11
+                # xorg.libXv
+                # xorg.libXrandr
                 zlib
                 ncurses5
                 stdenv.cc
                 binutils
-                libGLU
-                libGL
-                cudaPackages.cudnn
+                # libGLU
+                # libGL
+                # cudaPackages.cudnn
               ]);
             runScript = "fish";
             profile = ''
-              export CUDA_PATH=${pkgs.${system}.cudatoolkit}
-              export LD_LIBRARY_PATH=${pkgs.${system}.linuxPackages.nvidia_x11}/lib
-              export EXTRA_LDFLAGS="-L/lib -L${pkgs.${system}.linuxPackages.nvidia_x11}/lib"
               export EXTRA_CCFLAGS="-I/usr/include"
             '';
           }).env;
