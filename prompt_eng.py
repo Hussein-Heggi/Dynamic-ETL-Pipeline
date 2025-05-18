@@ -304,8 +304,7 @@ class endpointMatcher:
             f"Extract ONLY JSON parameters for {api_name} {endpoint_name} from: {context}\n"
             f"Required parameters: {param_schema['required']}\n"
             f"Optional parameters: {param_schema['optional']}\n"
-            "Return ONLY a JSON object with parameter names and values.\n"
-            "Example: {{\"symbol\": \"AAPL\", \"interval\": \"5min\"}}\n"
+            "Return the parameters format according to that stated in each api's documentation.\n"
             "DO NOT include any explanations or text outside the JSON object."
         )
         
@@ -542,20 +541,20 @@ if __name__ == "__main__":
                 "VX_TECHNICAL_INDICATORS"
             ],
             "endpoint_descriptions": {
-                "V2_AGGS_TICKER_RANGE": "Get stock price aggregates (open, high, low, close, volume) for any ticker over custom time windows (minute, hour, day, week, month, quarter, year)",
-                "V1_OPEN_CLOSE": "Get precise opening and closing prices with volume and after-hours information for a specific stock on a specific trading day",
-                "V2_AGGS_GROUPED_LOCALE_MARKET_DATE": "Get grouped daily open, high, low, close prices and volume for all stocks in a market on a specific date",
-                "V2_AGGS_TICKER_PREV": "Get previous day's official closing price and aggregate data for a stock",
-                "V3_TRADES": "Get historical trade executions (ticks) for a stock with timestamps, prices, and sizes",
-                "V3_QUOTES": "Get historical bid/ask quotes (NBBO) with timestamps, prices, and sizes",
-                "V1_LAST_STOCKS": "Get last trade execution price and details for a stock",
-                "V1_LAST_QUOTE_STOCKS": "Get last bid/ask quote (NBBO) for a stock",
-                "V2_SNAPSHOT_LOCALE_MARKETS_TICKERS": "Real-time snapshot of current prices, volumes, and changes for all stocks in a market",
-                "V2_SNAPSHOT_LOCALE_MARKETS_TICKER": "Real-time snapshot of current price, volume, bid/ask, and other market data for a specific stock",
-                "V3_REFERENCE_TICKERS": "Search and filter all available stock ticker symbols with comprehensive company information",
-                "V3_REFERENCE_TICKER": "Get detailed company profile, financial metrics, and other reference data for a specific stock",
-                "VX_SIMPLE_MOVINGAVERAGE": "Calculate simple moving averages (SMA) for a stock over specified time windows",
-                "VX_TECHNICAL_INDICATORS": "Fetch various technical indicators (RSI, MACD, Bollinger Bands, etc.) for stock analysis"
+                "V2_AGGS_TICKER_RANGE": "Stock price history with open/high/low/close/volume (custom timeframes: minute, hour, day, week, month)",
+                "V1_OPEN_CLOSE": "Daily opening and closing prices for specific date (includes after-hours data)",
+                "V2_AGGS_GROUPED_LOCALE_MARKET_DATE": "Market-wide stock prices for specific day (all tickers in exchange)",
+                "V2_AGGS_TICKER_PREV": "Previous day's stock market data (closing price and trading volume)",
+                "V3_TRADES": "Historical trade-by-trade data (execution prices, sizes, timestamps)",
+                "V3_QUOTES": "Historical bid/ask quotes (NBBO market data with timestamps)",
+                "V1_LAST_STOCKS": "Latest trade price and details (real-time last transaction)",
+                "V1_LAST_QUOTE_STOCKS": "Latest bid/ask prices (real-time market quote)",
+                "V2_SNAPSHOT_LOCALE_MARKETS_TICKERS": "Current market prices for all stocks (real-time snapshot)",
+                "V2_SNAPSHOT_LOCALE_MARKETS_TICKER": "Current stock market data (price, volume, bid/ask spread)",
+                "V3_REFERENCE_TICKERS": "Stock symbol search (ticker lookup and company names)",
+                "V3_REFERENCE_TICKER": "Company profile data (financial reference information)",
+                "VX_SIMPLE_MOVINGAVERAGE": "Stock technical analysis: Simple Moving Average (SMA values)",
+                "VX_TECHNICAL_INDICATORS": "Technical indicators for stocks (RSI, MACD, Bollinger Bands)"
             },
             "endpoint_params": {
                 "V2_AGGS_TICKER_RANGE": {
@@ -620,7 +619,7 @@ if __name__ == "__main__":
 
     matcher = endpointMatcher(api_endpoint_map, embedding_model="ProsusAI/finbert")
 
-    prompt = "I need stock market data including opening and closing prices with trading volume for apple only for the last 5 days."
+    prompt = "Show me the daily adjusted closing prices, trading volume, and 50-day simple moving average for Apple (APPL) from January 1st to March 31st 2023, along with the most recent quote data."
     endpoint_matches, recommended_apis, api_endpoint_mapping, endpoint_params = matcher.match_prompt(prompt)
     
     # Print results in the requested format
